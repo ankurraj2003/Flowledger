@@ -25,10 +25,10 @@ GST_NO = os.environ.get("GST_NO", "27AAAAA0000A1Z5")
 VIEWER_USERNAME = os.environ.get("VIEWER_USERNAME", "admin_user")
 
 
-# --------------- Google Gemini Settings ---------------
-GEMINI_MODEL = "gemini-3-flash-preview"
-GEMINI_TEMPERATURE = 0.2          # Why Low temp ? → deterministic JSON output (Less Variability)
-GEMINI_MAX_OUTPUT_TOKENS = 4096
+# --------------- Groq Settings ---------------
+GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_TEMPERATURE = 0.2          # Why Low temp ? → deterministic JSON output (Less Variability)
+GROQ_MAX_OUTPUT_TOKENS = 4096
 
 # --------------- Logging Configuration ---------------
 LOG_FORMAT = "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
@@ -40,15 +40,15 @@ logger = logging.getLogger("flowledger")
 
 def get_api_key(override: str | None = None) -> str | None:
     """
-    Retrieve the Google API key.
+    Retrieve the Groq API key.
 
     Priority:
         1. Explicit override (e.g. from Streamlit sidebar input)
-        2. GOOGLE_API_KEY environment variable / .env file
+        2. GROQ_API_KEY environment variable / .env file
 
     Returns:
         The API key string, or None if not found.
     """
     if override and override.strip():
         return override.strip()
-    return os.environ.get("GEMINI_API_KEY")
+    return os.environ.get("GROQ_API_KEY")

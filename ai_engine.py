@@ -9,14 +9,26 @@ structured response.  Uses the new google-genai SDK.
 import json
 import re
 import logging
-from google import genai
-from config import GEMINI_MODEL, GEMINI_TEMPERATURE, GEMINI_MAX_OUTPUT_TOKENS
+from groq import Groq
+from config import GROQ_MODEL, GROQ_TEMPERATURE, GROQ_MAX_OUTPUT_TOKENS
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 logger = logging.getLogger("flowledger.ai_engine")
 
+@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1.5, min=2, max=15), reraise=True)
+def _generate_with_retry(client, prompt):
+    logger.info("Calling Groq API...")
+    return client.chat.completions.create(
+        model=GROQ_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=GROQ_TEMPERATURE,
+        max_tokens=GROQ_MAX_OUTPUT_TOKENS,
+        response_format={"type": "json_object"}
+    )
+
 
 class AIAnalysisError(Exception):
-    """Raised when Gemini analysis fails."""
+    """Raised when Groq analysis fails."""
     pass
 
 
@@ -135,13 +147,13 @@ def _safe_number(value) -> float:
 
 def analyze_purchase_order(text: str, api_key: str) -> dict:
     """
-    Send extracted document text to Gemini and return structured PO data.
+    Send extracted document text to Groq and return structured PO data.
 
-    Uses the new google-genai SDK with genai.Client().
+    Uses the groq SDK with Groq().
 
     Args:
         text: Raw text extracted from the PDF.
-        api_key: Google Gemini API key.
+        api_key: Groq API key.
 
     Returns:
         dict matching the PO JSON schema.
@@ -150,21 +162,18 @@ def analyze_purchase_order(text: str, api_key: str) -> dict:
         AIAnalysisError: If the API call or JSON parsing fails.
     """
     try:
-        logger.info("Initializing Gemini client...")
-        client = genai.Client(api_key=api_key)
+        logger.info("Initializing Groq client...")
+        client = Groq(api_key=api_key)
 
         prompt = EXTRACTION_PROMPT.format(document_text=text)
-        logger.info(f"Sending document to {GEMINI_MODEL} for analysis...")
+        logger.info(f"Sending document to {GROQ_MODEL} for analysis...")
 
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=prompt,
-        )
+        response = _generate_with_retry(client, prompt)
 
-        if not response.text:
-            raise AIAnalysisError("Gemini returned an empty response.")
+        if not response.choices or not response.choices[0].message.content:
+            raise AIAnalysisError("Groq returned an empty response.")
 
-        raw_text = response.text
+        raw_text = response.choices[0].message.content
         logger.info(f"Received response — {len(raw_text)} chars.")
 
         # Parse JSON
@@ -174,7 +183,7 @@ def analyze_purchase_order(text: str, api_key: str) -> dict:
         except json.JSONDecodeError as e:
             logger.error(f"JSON parse error: {e}\nRaw response:\n{raw_text}")
             raise AIAnalysisError(
-                f"Gemini's response was not valid JSON. "
+                f"Groq's response was not valid JSON. "
                 f"Please try again. Parse error: {str(e)}"
             )
 
@@ -187,8 +196,14 @@ def analyze_purchase_order(text: str, api_key: str) -> dict:
         raise
 
     except Exception as e:
-        logger.error(f"Gemini API call failed: {e}")
+        logger.error(f"Groq API call failed: {e}")
+        error_msg = str(e)
+        if "503" in error_msg or "UNAVAILABLE" in error_msg:
+            raise AIAnalysisError(
+                f"Groq is currently experiencing high demand. "
+                f"Please wait a moment and try again. Detailed Error: {error_msg}"
+            )
         raise AIAnalysisError(
-            f"Failed to communicate with Google Gemini. "
-            f"Check your API key and internet connection. Error: {str(e)}"
+            f"Failed to communicate with Groq. "
+            f"Check your API key and internet connection. Error: {error_msg}"
         )

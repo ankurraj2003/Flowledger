@@ -37,8 +37,24 @@ def get_logo_base64():
     except FileNotFoundError:
         return None
 
+def get_image_base64(filename):
+    """Return base64-encoded string for embedding any asset image in HTML."""
+    filepath = os.path.join(os.path.dirname(__file__), "assets", filename)
+    try:
+        with open(filepath, "rb") as f:
+            return base64.b64encode(f.read()).decode()
+    except Exception as e:
+        logger.error(f"Error loading image {filename}: {e}")
+        return ""
 
 LOGO_B64 = get_logo_base64()
+UPLOAD_B64 = get_image_base64("upload.png")
+EXTRACT_B64 = get_image_base64("extract.png")
+AI_ANALYSIS_B64 = get_image_base64("ai_analysis.png")
+SKU_B64 = get_image_base64("sku.png")
+TALLY_B64 = get_image_base64("tally.webp")
+ZOHO_B64 = get_image_base64("zoho.png")
+ERP_B64 = get_image_base64("erp.png")
 
 # =============================================================
 #                  INDUSTRIAL DARK THEME CSS
@@ -367,6 +383,16 @@ st.markdown("""
         display: block;
         margin-bottom: 8px;
     }
+    .process-step .step-icon img {
+        height: 38px;
+        width: auto;
+        opacity: 0.9;
+        transition: transform 0.3s ease;
+    }
+    .process-step:hover .step-icon img {
+        transform: scale(1.1);
+        opacity: 1;
+    }
     .process-step .step-num {
         font-family: 'Rajdhani', sans-serif;
         font-weight: 700;
@@ -437,6 +463,12 @@ st.markdown("""
         font-size: 2rem;
         display: block;
         margin-bottom: 8px;
+    }
+    .erp-card .erp-icon img {
+        height: 48px;
+        width: auto;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
     .erp-card .erp-name {
         font-family: 'Rajdhani', sans-serif;
@@ -646,26 +678,26 @@ with tab_upload:
     # Process steps visualization
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.markdown("""<div class="process-step">
-            <span class="step-icon">📄</span>
+        st.markdown(f"""<div class="process-step">
+            <span class="step-icon"><img src="data:image/png;base64,{UPLOAD_B64}" alt="Upload"></span>
             <span class="step-num">Step 01</span>
             <span class="step-label">Upload PDFs</span>
         </div>""", unsafe_allow_html=True)
     with col2:
-        st.markdown("""<div class="process-step">
-            <span class="step-icon">🔍</span>
+        st.markdown(f"""<div class="process-step">
+            <span class="step-icon"><img src="data:image/png;base64,{EXTRACT_B64}" alt="Extract"></span>
             <span class="step-num">Step 02</span>
             <span class="step-label">Extract Text</span>
         </div>""", unsafe_allow_html=True)
     with col3:
-        st.markdown("""<div class="process-step">
-            <span class="step-icon">🤖</span>
+        st.markdown(f"""<div class="process-step">
+            <span class="step-icon"><img src="data:image/png;base64,{AI_ANALYSIS_B64}" alt="AI Analysis"></span>
             <span class="step-num">Step 03</span>
             <span class="step-label">AI Analysis</span>
         </div>""", unsafe_allow_html=True)
     with col4:
-        st.markdown("""<div class="process-step">
-            <span class="step-icon">🏷️</span>
+        st.markdown(f"""<div class="process-step">
+            <span class="step-icon"><img src="data:image/png;base64,{SKU_B64}" alt="SKU Mapping"></span>
             <span class="step-num">Step 04</span>
             <span class="step-label">SKU Mapping</span>
         </div>""", unsafe_allow_html=True)
@@ -687,7 +719,7 @@ with tab_upload:
 
         if st.button("⚡ PROCESS ALL INVOICES", type="primary", use_container_width=True):
             if not api_key:
-                st.error("❌ Please enter your Google Gemini API Key in the sidebar.", icon="🔑")
+                st.error("❌ Please enter your Groq API Key in the sidebar.", icon="🔑")
             else:
                 # Reset state for new batch
                 st.session_state.processed_invoices = []
@@ -709,7 +741,7 @@ with tab_upload:
                             st.write(f"✅ Extracted **{len(extracted_text)}** characters.")
 
                             # Step 2: AI Analysis
-                            st.write(f"🤖 Analyzing with Gemini...")
+                            st.write(f"🤖 Analyzing with Groq...")
                             po_data = analyze_purchase_order(extracted_text, api_key)
                             st.write(f"✅ Vendor: **{po_data.get('vendor_name', 'N/A')}** | Invoice#: **{po_data.get('invoice_no', 'N/A')}**")
 
@@ -940,20 +972,20 @@ with tab_export:
 
         badge_col1, badge_col2, badge_col3 = st.columns(3)
         with badge_col1:
-            st.markdown("""<div class="erp-card">
-                <span class="erp-icon">🏭</span>
+            st.markdown(f"""<div class="erp-card">
+                <span class="erp-icon"><img src="data:image/webp;base64,{TALLY_B64}" alt="Tally Prime"></span>
                 <span class="erp-name">Tally Prime</span><br>
                 <span class="erp-status badge-success">● Compatible</span>
             </div>""", unsafe_allow_html=True)
         with badge_col2:
-            st.markdown("""<div class="erp-card">
-                <span class="erp-icon">📘</span>
+            st.markdown(f"""<div class="erp-card">
+                <span class="erp-icon"><img src="data:image/png;base64,{ZOHO_B64}" alt="Zoho Books"></span>
                 <span class="erp-name">Zoho Books</span><br>
                 <span class="erp-status badge-success">● Compatible</span>
             </div>""", unsafe_allow_html=True)
         with badge_col3:
-            st.markdown("""<div class="erp-card">
-                <span class="erp-icon">⚙️</span>
+            st.markdown(f"""<div class="erp-card">
+                <span class="erp-icon"><img src="data:image/png;base64,{ERP_B64}" alt="Custom ERP"></span>
                 <span class="erp-name">Custom ERP</span><br>
                 <span class="erp-status badge-info">● Configurable</span>
             </div>""", unsafe_allow_html=True)
@@ -1067,9 +1099,10 @@ st.markdown(f"""
     <p>
         <span class="footer-accent">■</span> &nbsp;
         {APP_TITLE} V{APP_VERSION} &mdash; AI-Driven Batch Invoice Scanner
-        &nbsp;|&nbsp; Built with Streamlit + Google Gemini
+        &nbsp;|&nbsp; Built with Streamlit + Groq
         &nbsp;|&nbsp; &copy; {datetime.now().year}
         &nbsp; <span class="footer-accent">■</span>
     </p>
 </div>
 """, unsafe_allow_html=True)
+# triggering reload
