@@ -10,6 +10,20 @@ Flowledger is a premium, industrial-grade data extraction tool designed to autom
 
 ---
 
+## 📷 Screenshots
+
+<details>
+  <summary>Click to view Flowledger in action</summary>
+  <br>
+  <img src="assets/demo1.png" width="800" alt="Flowledger Demo 1">
+  <br>
+  <img src="assets/demo2.png" width="800" alt="Flowledger Demo 2">
+  <br>
+  <img src="assets/demo3.png" width="800" alt="Flowledger Demo 3">
+</details>
+
+---
+
 ## 🚀 Key Features
 
 - **Batch Processing**: Upload multiple PDF invoices simultaneously and process them in a single click.
