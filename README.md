@@ -10,9 +10,11 @@ Flowledger is a premium, industrial-grade data extraction tool designed to autom
 ---
 
 ## 📷 Screenshots
-
+### 🏠 Homepage
 ![Home Page](https://github.com/ankurraj2003/Flowledger/blob/main/assets/demo1.png?raw=true)
+### 🏠 Review Page
 ![Review Page](https://github.com/ankurraj2003/Flowledger/blob/main/assets/demo2.png?raw=true)
+### 🏠 Export Page
 ![Export Page](https://github.com/ankurraj2003/Flowledger/blob/main/assets/demo3.png?raw=true)
 
 ---
@@ -24,7 +26,7 @@ Flowledger is a premium, industrial-grade data extraction tool designed to autom
 - **Smart SKU Mapping**: Automatically enriches extracted items with internal SKUs using fuzzy matching or predefined logic.
 - **Visual Review & Edit**: A dedicated dashboard to validate AI output, edit item quantities/prices, and handle manual reviews.
 - **Industrial Export**: Batch export to consolidated Excel formats optimized for Tally, Zoho, and other ERP systems.
-- **Premium Industrial Theme**: High-contrast dark mode interface designed for readability and efficiency.
+- **Premium Industrial Theme**: High-contrast dark Amber mode interface designed for readability and efficiency.
 
 ---
 
