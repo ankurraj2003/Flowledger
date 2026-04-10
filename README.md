@@ -11,9 +11,9 @@ Flowledger is a premium, industrial-grade data extraction tool designed to autom
 
 ## 📷 Screenshots
 
-![](https://github.com/ankurraj2003/Flowledger/blob/main/assets/demo1.png?raw=true)
-![](https://github.com/ankurraj2003/Flowledger/blob/main/assets/demo2.png?raw=true)
-![](https://github.com/ankurraj2003/Flowledger/blob/main/assets/demo3.png?raw=true)
+![Home Page](https://github.com/ankurraj2003/Flowledger/blob/main/assets/demo1.png?raw=true)
+![Review Page](https://github.com/ankurraj2003/Flowledger/blob/main/assets/demo2.png?raw=true)
+![Export Page](https://github.com/ankurraj2003/Flowledger/blob/main/assets/demo3.png?raw=true)
 
 ---
 
