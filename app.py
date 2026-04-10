@@ -61,6 +61,7 @@ ERP_B64 = get_image_base64("erp.png")
 # =============================================================
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
     /* ══════════════════════════════════════════════════════════
        GLOBAL / ROOT
@@ -269,9 +270,14 @@ st.markdown("""
     [data-testid="stFileUploader"] {
         border: 2px dashed var(--accent) !important;
         border-radius: 10px;
-        padding: 24px;
+        padding: 32px 24px;
         background: rgba(255,107,0,0.03) !important;
         transition: all 0.3s ease;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
     [data-testid="stFileUploader"]:hover {
         background: rgba(255,107,0,0.06) !important;
@@ -279,6 +285,17 @@ st.markdown("""
     }
     [data-testid="stFileUploader"] * {
         color: var(--text-secondary) !important;
+    }
+    /* Fix overlapping upload icon text */
+    [data-testid="stFileUploader"] section button span {
+        display: none !important;
+    }
+    [data-testid="stFileUploader"] section button::before {
+        content: 'upload';
+        font-family: 'Material Icons';
+        margin-right: 8px;
+        font-size: 1.2rem;
+        vertical-align: middle;
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -367,11 +384,15 @@ st.markdown("""
         background: linear-gradient(135deg, #1a1a1a 0%, #222 100%);
         border: 1px solid var(--border);
         border-top: 3px solid var(--accent);
-        padding: 18px 16px;
-        margin: 8px 0;
+        padding: 24px 16px;
+        margin: 12px 0;
         border-radius: 0 0 8px 8px;
         text-align: center;
         transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
     }
     .process-step:hover {
         border-top-color: var(--accent-light);
@@ -381,7 +402,7 @@ st.markdown("""
     .process-step .step-icon {
         font-size: 1.8rem;
         display: block;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
     }
     .process-step .step-icon img {
         height: 38px;
